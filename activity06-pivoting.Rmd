@@ -1,6 +1,6 @@
 ---
 title: "Activity 6"
-author: "Name"
+author: "Alexa Kraklau"
 output: github_document
 ---
 
@@ -18,7 +18,7 @@ In this activity we will explore the differences between human-readable datasets
 Before making any visualizations, it is important to understand whether the data we have is tidy or not.
 
 
-In this activity you will be working with data from the popular tv sitcom Friends.
+In this activity you will be working with data from the popular TV sitcom Friends.
 Transcripts for all 10 seasons of the show were parsed and all utterances are broken down by season, episode, and scene.
 The `by_speaker` dataset summarizes the total number of words spoken by main character for each season.
 
@@ -46,7 +46,7 @@ Now, why is `by_speaker` untidy data?
 How would this data be organized if it were tidy?
 Do not use any of your new `{tidyr}` skills yet, only describe it.
 
-**Response**: 
+**Response**: The season,name, and count would go across so each season would be listed separately for each person and each name would be repeated for each season.
 
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any questions, contact your instructor. Otherwise feel free to continue on.
@@ -77,12 +77,22 @@ Similarly with directing the values to a new `Words` column.
 
 There are a number of helper functions to help with selecting columns.
 
-1. Try reproducing the pivoted data in the `pivot_season_longer` code chunck using either the `contains` or `starts_with` helper functions from `{tidyselect}` (this is loaded with the `{tidyverse}` by default).
+1. Try reproducing the pivoted data in the `pivot_season_longer` code chunk using either the `contains` or `starts_with` helper functions from `{tidyselect}` (this is loaded with the `{tidyverse}` by default).
 Remember that you can view the help documentation by using the `?` method in your **Console**.
 2. Assign your reformatted dataset to `friends_tidy`, and 
 3. Name your code chunk either `pivot_contains` or `pivot_ends` depending on which helper function you used.
 
+```{r pivot_contains}
+friends_tidy <- by_speaker %>% 
+  pivot_longer(
+    cols = starts_with("Se"),
+    names_to = "Season",
+    values_to = "Words"
+  )
 
+  
+friends_tidy
+```
 
 
 ### Save the dataset
@@ -94,7 +104,10 @@ We can do this by writing it to a file within our directory.
 2. Call the file that is being created "`friends_tidy.csv`".
 3. Name your code chunk `writing_file`
 
+```{r writing_file}
+write_csv(friends_tidy, here::here("data/friends_tidy.csv"))
 
+```
 
 
 Inspect that this file was created by looking in the `data` project folder in the **Files** pane.
@@ -113,7 +126,10 @@ This is the same information that we were just worked with, but structured in a 
 2. Assign this data file into meaningful objects.
 3. Name this code chunk `read_season_file`.
 
+```{r read_season_file}
+by_season <- read_csv(here::here("data","by_season.csv"))
 
+```
 
 
 Now, 
@@ -122,7 +138,16 @@ Now,
 2. Assign it to an object called `speaker_tidy`, and
 3. Name the code chunk `pivot_speaker`.
 
+```{r pivot_season_longer}
+friends_tidy <- by_season %>% 
+  pivot_longer(
+    cols = `Chandler`:`Ross`,
+    names_to = "Speaker",
+    values_to = "Words"
+  )
 
+friends_tidy
+```
 
 
 #### Challenge: Total words spoken
@@ -169,13 +194,16 @@ The code below takes our tidy dataset, then creates one variable for each *Seaso
 
 ```{r season_wide}
 friends_tidy %>% 
-  pivot_wider(names_from = Season, values_from = Words)
+  pivot_wider(names_from = season, values_from = Words)
 ```
 
 Write the code to take the tidy dataset and create one variable for each *speaker*.
 Call this code chunk `speaker_wide`.
 
-
+```{r speaker_wide}
+friends_tidy %>% 
+  pivot_wider(names_from = Speaker, values_from = Words)
+```
 
 
 <img src="README-img/noun_pause.png" alt="pause" width = "20"/> <b>Planned Pause Point</b>: If you feel that you have a good understanding of these commands, feel free to start working on your project. The remainder of this activity will help to expand these commands.
