@@ -216,7 +216,10 @@ A note before installing new packages: The HPC support team has [created a guide
 
 Use `knitr::kable` and `{kableExtra}` to dress up the `speaker_wide` table.
 
-
+```{r dress_up_table}
+friends_tidy %>% 
+knitr::kable
+```
 
 ### The Curb Cut Effect
 
